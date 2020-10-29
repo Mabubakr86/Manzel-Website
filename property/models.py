@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.urls import reverse
 
 
 class Property(models.Model):
@@ -26,6 +27,10 @@ class Property(models.Model):
             self.slug = slugify(self.title)
         super(Property, self).save(*args,**kwargs)
 
+
+    def get_absolute_url(self):
+        return reverse('property:propert_detail', kwargs={'slug':self.slug})
+
     def __str__(self):
         return self.title
 
@@ -43,6 +48,10 @@ class Category(models.Model):
 class PropertyImages(models.Model):
     _property = models.ForeignKey(to=Property, on_delete=models.CASCADE)
     images = models.ImageField(upload_to='properties/images/', null=True)
+
+    class Meta:
+        verbose_name = 'propertyimage'
+        verbose_name_plural = 'propertyimages'
 
 
 class PropertyRating(models.Model):
